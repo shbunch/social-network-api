@@ -43,8 +43,6 @@ module.exports = {
       if (!users) {
         res.status(404).json({ message: 'No users with that ID' });
       }
-
-      await Student.deleteMany({ _id: { $in: users.students } });
       res.json({ message: 'User deleted!' });
     } catch (err) {
       res.status(500).json(err);
