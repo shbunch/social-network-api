@@ -28,8 +28,14 @@ module.exports = {
   // Create a thought
   async createThought(req, res) {
     try {
-      const thoughts = await Thought.create(req.body);
-      res.json(thoughts);
+      const thought = await Thought.create(req.body);
+      const user = await User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $addToSet: { thoughts: thought._id }},
+        { new: true }
+        )
+        // REFERENCE ACTIVITY 26 IN CLASS REPO NOSQL
+      res.json(user);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -38,7 +44,7 @@ module.exports = {
   // Delete a thought
   async deleteThought(req, res) {
     try {
-      const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtId});
+      const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
       if (!thoughts) {
         res.status(404).json({ message: 'No thoughts with that ID' });
